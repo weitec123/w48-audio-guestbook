@@ -1,0 +1,7 @@
+.DS_Store
+scratch/
+audio_test/
+scratch_test.ino
+*.aiff
+*.pyc
+__pycache__/
