@@ -132,6 +132,13 @@ Wenn das Projekt frisch auf einen ESP32-S3 geflasht wird, richtet sich das Telef
    Der ESP32 startet kurz neu, bucht sich in dein Heim-WLAN ein und schaltet den störenden Access-Point automatisch ab. Ab sofort erreichst du das Telefon ganz bequem aus deinem normalen Netzwerk unter:  
    👉 **`http://audio-guestbook.local`** (bzw. über die vom Router zugewiesene IP-Adresse).
 
+### 🎈 Offline- / Event-Einsatz (z. B. auf Hochzeiten ohne WLAN)
+
+Das Telefon funktioniert **vollkommen autark ohne Internet oder Heim-WLAN**:
+- **Keine Einrichtung vor Ort nötig:** Einfach per USB-Netzteil oder Powerbank anstecken.
+- **Glasklarer Ton:** Auch ohne Heim-WLAN schaltet der ESP32 den Hotspot bei abgenommenem Hörer sofort komplett ab (`WIFI_OFF`). Es gibt also auch auf Veranstaltungen absolut kein Rauschen oder Klackern bei der Aufnahme!
+- **Aufnahmen herunterladen:** Nach dem Event verbindet sich das Brautpaar/der Kunde einfach mit dem WLAN `W48-Guestbook` (Passwort: `guestbook123`), öffnet `http://192.168.4.1` und lädt mit einem Klick alle Sprachnachrichten als fertiges **ZIP-Archiv** herunter.
+
 ---
 
 ## 🛠️ Kompilieren & Flashen (Arduino CLI)
