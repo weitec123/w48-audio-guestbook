@@ -39,6 +39,8 @@ Umbau eines historischen **W48 Bakelit-Tischtelefons** zu einem autarken Audio-G
 
 ## 🔌 Verkabelungsplan & Pinbelegung
 
+![Verkabelungsplan](wiring_diagram.png)
+
 ```mermaid
 graph TD
     subgraph ESP32["ESP32-S3 Board"]
