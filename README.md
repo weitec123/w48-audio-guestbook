@@ -1,6 +1,8 @@
-# ☎️ W48 Audio Guestbook (ESP32-S3)
+# ☎️ Universal ESP32-S3 Audio Guestbook (Vintage Telefone & DIY)
 
-Umbau eines historischen **W48 Bakelit-Tischtelefons** zu einem autarken Audio-Gästebuch mit Web-Interface, MicroSD-Speicher, Wählscheiben-Easter-Eggs und Erdtasten-Steuerung.
+Ein universelles, autarkes **Audio-Gästebuch** auf Basis des **ESP32-S3** mit Web-Dashboard, MicroSD-Speicher (16-Bit PCM Studio-Qualität), automatischer Störgeräusch-Unterdrückung und flexibler Steuerung.
+
+> **Universell einsetzbar:** Entwickelt und praktisch erprobt in einem historischen **W48 Bakelit-Telefon**, eignet sich dieser Code für **jedes beliebige Vintage-Telefon** (z. B. FeTAp 611/791, US-Telefone wie Western Electric 500), Tastentelefone oder eigene DIY-Gehäuse. Jeder Standard-Gabelkontakt (Schalter) und handelsübliche Impuls-Wählscheiben bzw. Taster werden direkt unterstützt.
 
 ![Web Interface](webinterface.png)
 
