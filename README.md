@@ -112,6 +112,26 @@ graph TD
 | | MISO | **GPIO 11** | Master In Slave Out |
 | *(Optional)* **Wecker (Glocke)** | Steuerung | **GPIO 15 & 16** | Über H-Brücke (25 Hz Umpolung) |
 
+## 🚀 Erstinbetriebnahme & WLAN-Einrichtung
+
+Wenn das Projekt frisch auf einen ESP32-S3 geflasht wird, richtet sich das Telefon vollautomatisch ein:
+
+1. **Hotspot verbinden:**  
+   Beim ersten Start (oder wenn das gespeicherte Heim-WLAN nicht erreichbar ist) öffnet der ESP32 automatisch einen eigenen WLAN-Access-Point:
+   - **WLAN-Name (SSID):** `W48-Guestbook`
+   - **Passwort:** `guestbook123`
+
+2. **Web-Dashboard aufrufen:**  
+   Verbinde dein Smartphone oder deinen Laptop mit dem WLAN `W48-Guestbook` und öffne im Browser:  
+   👉 **`http://192.168.4.1`** (oder `http://audio-guestbook.local`)
+
+3. **Heim-WLAN eintragen:**  
+   Scrolle im Dashboard ganz nach unten zu **⚙️ Einstellungen (WLAN & Server)**, trage deinen normalen Heim-WLAN-Namen (SSID) und das Passwort ein und klicke auf **Speichern**.
+
+4. **Fertig:**  
+   Der ESP32 startet kurz neu, bucht sich in dein Heim-WLAN ein und schaltet den störenden Access-Point automatisch ab. Ab sofort erreichst du das Telefon ganz bequem aus deinem normalen Netzwerk unter:  
+   👉 **`http://audio-guestbook.local`** (bzw. über die vom Router zugewiesene IP-Adresse).
+
 ---
 
 ## 🛠️ Kompilieren & Flashen (Arduino CLI)
@@ -120,4 +140,5 @@ graph TD
 arduino-cli compile --fqbn esp32:esp32:esp32s3:FlashSize=16M,PartitionScheme=huge_app,PSRAM=opi,CDCOnBoot=cdc audio_guestbook
 arduino-cli upload -p /dev/cu.usbmodem2101 --fqbn esp32:esp32:esp32s3:FlashSize=16M,PartitionScheme=huge_app,PSRAM=opi,CDCOnBoot=cdc audio_guestbook
 ```
+
 
