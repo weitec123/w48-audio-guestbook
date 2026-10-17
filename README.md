@@ -25,22 +25,92 @@ Umbau eines historischen **W48 Bakelit-Tischtelefons** zu einem autarken Audio-G
   - Einzel-Download, Direkt-Player im Browser und **1-Klick ZIP-Download** aller Aufnahmen
   - Eigene `.wav`-Dateien für Ansage und Easter Eggs hochladen
 
-## 🔌 Pinbelegung (ESP32-S3)
+## 📦 Benötigte Bauteile (BOM)
 
-| Komponente | Pin am Modul | ESP32-S3 GPIO |
-| :--- | :--- | :--- |
-| **MAX98357A (I2S Verstärker)** | BCLK | GPIO 4 |
-| | LRC / WS | GPIO 5 |
-| | DIN / DOUT | GPIO 6 |
-| **MAX9814 (Mikrofon)** | OUT | GPIO 1 (ADC) |
-| | VDD | 3.3V |
-| **Gabelumschalter (Hörer)** | Schließer gegen GND | GPIO 7 (`INPUT_PULLUP`) |
-| **Wählscheibe (nsi Impuls)** | Impulskontakt gegen GND | GPIO 8 (`INPUT_PULLUP`) |
-| **Erdtaste (Knopf)** | Schließer gegen GND | GPIO 9 (`INPUT_PULLUP`) |
-| **MicroSD-Kartenleser (3.3V)** | CS | GPIO 10 |
-| | MOSI | GPIO 13 |
-| | SCK / CLK | GPIO 12 |
-| | MISO | GPIO 11 |
+1. **W48 Tischtelefon** (historisches Bakelit-Telefon der Deutschen Bundespost, mit Hörer, Gabelkontakt, Erdtaste und N38-Wählscheibe)
+2. **ESP32-S3 Entwicklungsboard** (z. B. ESP32-S3-DevKitC-1 mit 16MB Flash, 8MB PSRAM, USB-C)
+3. **MAX98357A I2S Mono-Verstärker** (DAC & Verstärker für die originale Hörkapsel/Lautsprecher im W48-Hörer)
+4. **MAX9814 Elektret-Mikrofonverstärker** mit automatischer Verstärkungsregelung (AGC) – ersetzt die Kohlekapsel in der Sprechmuschel
+5. **MicroSD-Kartenleser-Modul (passiv, 3.3V)** mit SPI-Schnittstelle (ohne 5V-Spannungsregler / Level-Shifter für schnellere Signalflanken)
+6. **MicroSD-Karte** (z. B. 4 GB oder 8 GB, FAT32)
+7. *(Optional)* **L298N Mini H-Brücke** oder Transistorstufe zur Ansteuerung der originalen 25-Hz-Wechselstromwecker (Glocken) an GPIO 15 & 16
+
+---
+
+## 🔌 Verkabelungsplan & Pinbelegung
+
+```mermaid
+graph TD
+    subgraph ESP32["ESP32-S3 Board"]
+        3V3["3.3V"]
+        GND["GND"]
+        G1["GPIO 1 (ADC)"]
+        G4["GPIO 4 (BCLK)"]
+        G5["GPIO 5 (LRC/WS)"]
+        G6["GPIO 6 (DOUT)"]
+        G7["GPIO 7 (Gabel)"]
+        G8["GPIO 8 (Wählscheibe)"]
+        G9["GPIO 9 (Erdtaste)"]
+        G10["GPIO 10 (SD CS)"]
+        G11["GPIO 11 (SD MISO)"]
+        G12["GPIO 12 (SD SCK)"]
+        G13["GPIO 13 (SD MOSI)"]
+    end
+
+    subgraph MIC["MAX9814 Mikrofon"]
+        M_VDD["VDD"] --> 3V3
+        M_GND["GND"] --> GND
+        M_OUT["OUT"] --> G1
+        M_GAIN["GAIN"] --> GND
+    end
+
+    subgraph AMP["MAX98357A I2S Verstärker"]
+        A_VIN["VIN"] --> 3V3
+        A_GND["GND"] --> GND
+        A_BCLK["BCLK"] --> G4
+        A_LRC["LRC"] --> G5
+        A_DIN["DIN"] --> G6
+        A_SPK["SPK +/-"] --> HOERER["Hörkapsel (Hörer)"]
+    end
+
+    subgraph SD["MicroSD Kartenleser"]
+        S_VCC["VCC (3.3V)"] --> 3V3
+        S_GND["GND"] --> GND
+        S_CS["CS"] --> G10
+        S_MOSI["MOSI"] --> G13
+        S_CLK["CLK / SCK"] --> G12
+        S_MISO["MISO"] --> G11
+    end
+
+    subgraph W48["W48 Kontakte (gegen GND)"]
+        W_GABEL["Gabelumschalter (Schließer)"] --> G7
+        W_NSI["Wählscheibe nsi (Impulskontakt)"] --> G8
+        W_ERD["Erdtaste (Knopf)"] --> G9
+    end
+```
+
+### Detaillierte Anschlusstabelle
+
+| Komponente | Pin am Modul | ESP32-S3 GPIO | Bemerkung |
+| :--- | :--- | :--- | :--- |
+| **Spannungsversorgung** | 3.3V / VCC | 3V3 | Für alle Module (3.3V Logikpegel!) |
+| | GND | GND | Gemeinsame Masse für Module und W48-Kontakte |
+| **MAX98357A (Verstärker)** | BCLK / Bit Clock | **GPIO 4** | I2S Taktleitung |
+| | LRC / Word Select | **GPIO 5** | I2S Kanalumschaltung |
+| | DIN / Data In | **GPIO 6** | I2S Audiodaten |
+| | SPK+ / SPK- | Hörkapsel | Anschlüsse zur dynamischen Hörkapsel im Hörer |
+| **MAX9814 (Mikrofon)** | OUT | **GPIO 1** | Analoges Audiosignal (ADC1) |
+| | GAIN | GND / offen | Gain fest eingestellt (per Software geregelt) |
+| **Gabelumschalter** | Schließer | **GPIO 7** | Gegen GND (`INPUT_PULLUP`, LOW = Hörer abgenommen) |
+| **Wählscheibe** | Impulskontakt (nsi) | **GPIO 8** | Gegen GND (`INPUT_PULLUP`, 100ms Impulsserie) |
+| **Erdtaste (Knopf)** | Tastkontakt | **GPIO 9** | Gegen GND (`INPUT_PULLUP`, LOW = gedrückt) |
+| **MicroSD-Modul (SPI)** | CS | **GPIO 10** | Chip Select |
+| | MOSI | **GPIO 13** | Master Out Slave In |
+| | SCK / CLK | **GPIO 12** | SPI Clock |
+| | MISO | **GPIO 11** | Master In Slave Out |
+| *(Optional)* **Wecker (Glocke)** | Steuerung | **GPIO 15 & 16** | Über H-Brücke (25 Hz Umpolung) |
+
+---
 
 ## 🛠️ Kompilieren & Flashen (Arduino CLI)
 
@@ -48,3 +118,4 @@ Umbau eines historischen **W48 Bakelit-Tischtelefons** zu einem autarken Audio-G
 arduino-cli compile --fqbn esp32:esp32:esp32s3:FlashSize=16M,PartitionScheme=huge_app,PSRAM=opi,CDCOnBoot=cdc audio_guestbook
 arduino-cli upload -p /dev/cu.usbmodem2101 --fqbn esp32:esp32:esp32s3:FlashSize=16M,PartitionScheme=huge_app,PSRAM=opi,CDCOnBoot=cdc audio_guestbook
 ```
+
