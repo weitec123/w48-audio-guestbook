@@ -30,7 +30,7 @@ Umbau eines historischen **W48 Bakelit-Tischtelefons** zu einem autarken Audio-G
 1. **W48 Tischtelefon** (historisches Bakelit-Telefon der Deutschen Bundespost, mit Hörer, Gabelkontakt, Erdtaste und N38-Wählscheibe)
 2. **ESP32-S3 Entwicklungsboard** (z. B. ESP32-S3-DevKitC-1 mit 16MB Flash, 8MB PSRAM, USB-C)
 3. **MAX98357A I2S Mono-Verstärker** (DAC & Verstärker für die originale Hörkapsel/Lautsprecher im W48-Hörer)
-4. **MAX9814 Elektret-Mikrofonverstärker** mit automatischer Verstärkungsregelung (AGC) – ersetzt die Kohlekapsel in der Sprechmuschel
+4. **MAX9814 Elektret-Mikrofonverstärker** mit AGC – *Hinweis:* Die kleine runde Elektret-Kapsel wird von der MAX9814-Platine abgelötet und wandert vorn in die Sprechmuschel des W48-Hörers (verbunden über 2 Adern des 4-adrigen Hörerkabels zurück an die Lötpads der Platine).
 5. **MicroSD-Kartenleser-Modul (passiv, 3.3V)** mit SPI-Schnittstelle (ohne 5V-Spannungsregler / Level-Shifter für schnellere Signalflanken)
 6. **MicroSD-Karte** (z. B. 4 GB oder 8 GB, FAT32)
 7. *(Optional)* **L298N Mini H-Brücke** oder Transistorstufe zur Ansteuerung der originalen 25-Hz-Wechselstromwecker (Glocken) an GPIO 15 & 16
