@@ -2,6 +2,8 @@
 
 Umbau eines historischen **W48 Bakelit-Tischtelefons** zu einem autarken Audio-Gästebuch mit Web-Interface, MicroSD-Speicher, Wählscheiben-Easter-Eggs und Erdtasten-Steuerung.
 
+![Web Interface](webinterface.png)
+
 ## ✨ Features
 - **Unkomprimierte 16-Bit PCM Studio-Qualität (16 kHz WAV)** direkt auf MicroSD-Karte (Fallback auf internen LittleFS-Flash).
 - **100 % Störungsfreier Ton:**
